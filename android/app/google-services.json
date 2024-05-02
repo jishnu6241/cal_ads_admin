@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "850051760376",
+    "project_id": "cal-ads",
+    "storage_bucket": "cal-ads.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850051760376:android:aad7bc73611619e5cabb0d",
+        "android_client_info": {
+          "package_name": "com.example.cal_ads"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1HhPpQIPK-IfhTpx80PgdLwhnOSKajp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850051760376:android:0894d8d893d0b006cabb0d",
+        "android_client_info": {
+          "package_name": "com.example.cal_ads_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1HhPpQIPK-IfhTpx80PgdLwhnOSKajp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
