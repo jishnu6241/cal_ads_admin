@@ -60,8 +60,7 @@ class PendingAds extends StatelessWidget {
               color: Colorconstant.primerycolor,
               borderRadius: BorderRadius.circular(10),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: DataTable2(
                   columns: [
                     DataColumn2(

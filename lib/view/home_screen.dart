@@ -6,6 +6,7 @@ import 'package:cal_ads_admin/view/available_ads.dart';
 import 'package:cal_ads_admin/view/dashboard.dart';
 import 'package:cal_ads_admin/view/login_screen.dart';
 import 'package:cal_ads_admin/view/pending_screen.dart';
+import 'package:cal_ads_admin/view/user_suggestion.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,18 +28,17 @@ class _HomeScreenState extends State<HomeScreen>
     Future.delayed(
       const Duration(milliseconds: 200),
       () {
-        if (FirebaseAuth.instance.currentUser == null) {
+        if (FirebaseAuth.instance.currentUser!.email != 'admin@calads.com') {
           Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const LoginScreen(),
-            ),
-            (route) => false,
-          );
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+              (route) => false);
         }
       },
     );
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(() {
       setState(() {});
     });
@@ -122,6 +122,17 @@ class _HomeScreenState extends State<HomeScreen>
                         _tabController.animateTo(3);
                       },
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    DrawerItem(
+                      iconData: Icons.list_alt,
+                      label: 'feedback',
+                      isActive: _tabController.index == 4,
+                      onTap: () {
+                        _tabController.animateTo(4);
+                      },
+                    ),
                     const Spacer(),
                     TextButton.icon(
                       onPressed: () {
@@ -182,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen>
                       DashBoard(),
                       ActiveAds(),
                       PendingAds(),
-                      AvailableAds()
+                      AvailableAds(),
+                      UserSuggestion()
                     ],
                   ),
                 ),

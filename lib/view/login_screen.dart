@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Future.delayed(
       const Duration(milliseconds: 200),
       () {
-        if (FirebaseAuth.instance.currentUser != null) {
+        if (FirebaseAuth.instance.currentUser!.email == 'admin@calads.com') {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                       controller: _emailController,
-                      style: GoogleFonts.lindenHill(
+                      style: GoogleFonts.poppins(
                           color: Colorconstant.primerycolor,
                           fontSize: 22,
                           fontWeight: FontWeight.normal),
@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       obscureText: obscureText,
                       obscuringCharacter: '*',
-                      style: GoogleFonts.lindenHill(
+                      style: GoogleFonts.poppins(
                           color: Colorconstant.primerycolor,
                           fontSize: 22,
                           fontWeight: FontWeight.normal),
