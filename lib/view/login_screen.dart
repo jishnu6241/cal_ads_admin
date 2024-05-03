@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     Future.delayed(
-      const Duration(milliseconds: 200),
+      const Duration(milliseconds: 300),
       () {
         if (FirebaseAuth.instance.currentUser!.email == 'admin@calads.com') {
           Navigator.pushAndRemoveUntil(
@@ -127,30 +127,44 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: 'Login',
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: _emailController.text.trim(),
-                                  password: _passwordController.text.trim())
-                              .then(
-                                (value) => Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const HomeScreen()),
-                                    (route) => false),
-                              )
-                              .onError((error, stackTrace) {
+                          if (_emailController.text.trim() ==
+                              'admin@calads.com') {
+                            await FirebaseAuth.instance
+                                .signInWithEmailAndPassword(
+                                    email: _emailController.text.trim(),
+                                    password: _passwordController.text.trim())
+                                .then(
+                                  (value) => Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                      (route) => false),
+                                )
+                                .onError((error, stackTrace) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => CustomAlertDialog(
+                                  title: 'Error',
+                                  label: "something went wrong",
+                                  onOk: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            });
+                          } else {
                             showDialog(
                               context: context,
                               builder: (context) => CustomAlertDialog(
                                 title: 'Error',
-                                label: "something went wrong",
+                                label: "Please enter a valid email",
                                 onOk: () {
                                   Navigator.pop(context);
                                 },
                               ),
                             );
-                          });
+                          }
                         }
                       },
                     )

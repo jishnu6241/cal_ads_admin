@@ -1,11 +1,43 @@
-import 'package:data_table_2/data_table_2.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/color_constant.dart';
 
-class DashBoard extends StatelessWidget {
+class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
+
+  @override
+  State<DashBoard> createState() => _DashBoardState();
+}
+
+class _DashBoardState extends State<DashBoard> {
+  int activeAds = 0, pendingAds = 0, feedback = 0, availableAds = 0;
+  @override
+  void initState() {
+    super.initState();
+    getCount();
+  }
+
+  Future<void> getCount() async {
+    QuerySnapshot feedbackSnapsot =
+        await FirebaseFirestore.instance.collection('contact_us').get();
+    QuerySnapshot availableAdsSnapshot =
+        await FirebaseFirestore.instance.collection('ads').get();
+    QuerySnapshot pendingAdsSnapshot = await FirebaseFirestore.instance
+        .collection('user_ads')
+        .where('status', isEqualTo: 'pending')
+        .get();
+    QuerySnapshot activeSnapshot = await FirebaseFirestore.instance
+        .collection('user_ads')
+        .where('status', isEqualTo: 'active')
+        .get();
+    feedback = feedbackSnapsot.docs.length;
+    availableAds = availableAdsSnapshot.docs.length;
+    pendingAds = pendingAdsSnapshot.docs.length;
+    activeAds = activeSnapshot.docs.length;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +58,9 @@ class DashBoard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {});
+                },
                 icon: Icon(
                   Icons.refresh,
                   color: Colorconstant.tertiarycolor,
@@ -37,98 +71,30 @@ class DashBoard extends StatelessWidget {
           const Divider(
             height: 20,
           ),
-          const Wrap(
+          const Spacer(),
+          Wrap(
+            spacing: 40,
             runSpacing: 20,
-            spacing: 20,
             children: [
-              DashboardItem(),
-              DashboardItem(),
-              DashboardItem(),
-              DashboardItem(),
+              DashboardItem(
+                label: 'Available Ads',
+                value: '$availableAds',
+              ),
+              DashboardItem(
+                label: 'Pending Ads',
+                value: '$pendingAds',
+              ),
+              DashboardItem(
+                label: 'Active Ads',
+                value: '$activeAds',
+              ),
+              DashboardItem(
+                label: 'FeedBack',
+                value: '$feedback',
+              ),
             ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: Material(
-              color: Colorconstant.primerycolor,
-              borderRadius: BorderRadius.circular(10),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DataTable2(
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        "Email",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        "Category",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        "Type",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        "Duration",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        "Fee",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        "Location",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                      numeric: true,
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Suggestion",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, color: Colorconstant.secondarycolor),
-                      ),
-                      numeric: true,
-                    ),
-                  ],
-                  rows: List<DataRow2>.generate(
-                    20,
-                    (index) => const DataRow2(
-                      cells: [
-                        DataCell(Text('joe@gmail.com')),
-                        DataCell(Text('Billboard')),
-                        DataCell(Text('Billboard in mall')),
-                        DataCell(Text('1 Year')),
-                        DataCell(Text('\$500')),
-                        DataCell(Text('Location')),
-                        DataCell(Text('Suggestion'))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
+          const Spacer(),
         ],
       ),
     );
@@ -136,33 +102,39 @@ class DashBoard extends StatelessWidget {
 }
 
 class DashboardItem extends StatelessWidget {
+  final String label, value;
   const DashboardItem({
     super.key,
+    required this.label,
+    required this.value,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
       color: Colorconstant.tertiarycolor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: Column(
-          children: [
-            Text(
-              "Total Active Billboard",
-              style: GoogleFonts.poppins(
-                  fontSize: 15, color: Colorconstant.primerycolor),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              "10",
-              style: GoogleFonts.poppins(
-                  fontSize: 15, color: Colorconstant.primerycolor),
-            ),
-          ],
+      child: ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: 200),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                    fontSize: 15, color: Colorconstant.primerycolor),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                value,
+                style: GoogleFonts.poppins(
+                    fontSize: 15, color: Colorconstant.primerycolor),
+              ),
+            ],
+          ),
         ),
       ),
     );
